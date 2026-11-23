@@ -1,0 +1,15 @@
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=True latency_s=0.489 prompt_tokens=351 completion_tokens=31
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=True latency_s=0.466 prompt_tokens=378 completion_tokens=121
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=False latency_s=0.871 prompt_tokens=785 completion_tokens=537
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=True latency_s=0.273 prompt_tokens=552 completion_tokens=79
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=False latency_s=0.441 prompt_tokens=1259 completion_tokens=72
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=True latency_s=0.600 prompt_tokens=526 completion_tokens=151
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=False latency_s=0.604 prompt_tokens=1058 completion_tokens=112
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=True latency_s=0.696 prompt_tokens=449 completion_tokens=248
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=False latency_s=0.901 prompt_tokens=826 completion_tokens=510
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=True latency_s=0.496 prompt_tokens=630 completion_tokens=139
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=False latency_s=0.655 prompt_tokens=1225 completion_tokens=200
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=True latency_s=0.307 prompt_tokens=692 completion_tokens=137
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=False latency_s=0.953 prompt_tokens=1114 completion_tokens=513
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=True latency_s=0.522 prompt_tokens=660 completion_tokens=192
+app-1  | INFO app: groq_inference model=openai/gpt-oss-20b planner=False latency_s=0.871 prompt_tokens=1129 completion_tokens=419

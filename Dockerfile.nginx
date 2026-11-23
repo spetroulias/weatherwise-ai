@@ -1,0 +1,9 @@
+
+FROM nginx:1.30.7-alpine3.24
+
+# Apply available Alpine security updates
+RUN apk upgrade --no-cache
+
+# Display Nginx version during build
+RUN nginx -v
+

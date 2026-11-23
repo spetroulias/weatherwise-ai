@@ -1,0 +1,15 @@
+
+services:
+  app:
+    image: weatherwise:dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "127.0.0.1:8501:8501"
+    volumes:
+      - ./:/app:ro
+    env_file:
+      - .env
+    environment:
+      STREAMLIT_SERVER_FILE_WATCHER_TYPE: poll

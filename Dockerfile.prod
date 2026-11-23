@@ -1,0 +1,70 @@
+
+# Stage 1: Compile the single application module with Nuitka.
+FROM python:3.12-slim AS nuitka-builder
+
+WORKDIR /build
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN python -m pip install --no-cache-dir Nuitka==4.3
+COPY app.py .
+
+RUN python -m nuitka \
+    --mode=module \
+    --nofollow-imports \
+    --output-dir=/build/dist \
+    app.py
+
+
+# Stage 2: Install runtime dependencies and the compiled module.
+FROM python:3.12-slim AS production
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Keep the existing available security fix.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends --only-upgrade zlib1g && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN python -m pip install --no-cache-dir --require-hashes -r requirements.txt && \
+    useradd --create-home --uid 10001 appuser
+
+COPY --from=nuitka-builder /build/dist/app*.so /app/
+
+# Streamlit needs a .py entrypoint. This small launcher imports the compiled app;
+# it is generated inside the image, not added to the project source files.
+# The cache wrapper stays in Python so Streamlit can hash its source reliably.
+RUN printf '%s\n' \
+    'import streamlit as st' \
+    'import app' \
+    '' \
+    '@st.cache_data(ttl=900)' \
+    'def cached_weather(city):' \
+    '    location = app.find_city(city)' \
+    '    forecast = app.get_forecast(location["latitude"], location["longitude"])' \
+    '    return location, forecast' \
+    '' \
+    'app.load_weather = cached_weather' \
+    'app.main()' \
+    > /app/streamlit_entry.py
+
+# Verify that runtime imports resolve to the Nuitka binary.
+RUN python -c "import app; \
+    assert hasattr(app, '__compiled__'); \
+    assert callable(app.main); \
+    assert callable(app.get_forecast); \
+    print('Nuitka app module verified')"
+
+USER appuser
+EXPOSE 8501
+
+CMD ["streamlit", "run", "/app/streamlit_entry.py", \
+     "--server.address=0.0.0.0", \
+     "--server.port=8501", \
+     "--server.headless=true"]

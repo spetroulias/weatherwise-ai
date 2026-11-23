@@ -1,0 +1,33 @@
+
+services:
+  app:
+    image: weatherwise:prod
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    env_file:
+      - .env
+    expose:
+      - "8501"
+    networks:
+      - frontend-net
+    restart: unless-stopped
+
+  proxy:
+    image: weatherwise:nginx
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "127.0.0.1:8501:8080"
+    volumes:
+      - ./nginx-default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - frontend-net
+    restart: unless-stopped
+
+networks:
+  frontend-net:
+    driver: bridge
